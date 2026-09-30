@@ -22,7 +22,12 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - run: npm run build
+      - name: Build
+        run: npm run build
+        env:
+          VITE_TURNSTILE_SITE_KEY: ${{ vars.VITE_TURNSTILE_SITE_KEY }}
+          VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_PUBLISHABLE_KEY: ${{ vars.VITE_SUPABASE_PUBLISHABLE_KEY }}
       # O GitHub Pages não conhece as rotas do React Router: servir o index.html
       # como 404.html faz links diretos (ex.: /produto/iphone15pro) carregarem o app.
       - run: cp dist/index.html dist/404.html
