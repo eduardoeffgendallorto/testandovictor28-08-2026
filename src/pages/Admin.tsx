@@ -7,6 +7,7 @@ import { LoginForm } from "@/components/admin/LoginForm";
 import { PasswordDialog } from "@/components/admin/PasswordDialog";
 import { ProductList } from "@/components/admin/ProductList";
 import { Button } from "@/components/ui/button";
+import { SetupMFA } from "@/components/admin/SetupMFA";
 
 const Admin = () => {
   const { status, email } = useAdminSession();
@@ -79,12 +80,18 @@ const Admin = () => {
         </div>
       </header>
 
-      <main className="container py-8 md:py-10">
-        <h1 className="text-2xl md:text-3xl font-bold tracking-tight mb-1">Produtos</h1>
-        <p className="text-muted-foreground mb-6">
-          Edite preços, capacidades e cores. O que você salvar aparece na loja na hora.
-        </p>
-        <ProductList />
+      <main className="container py-8 md:py-10 space-y-12">
+        <section>
+          <h1 className="text-2xl md:text-3xl font-bold tracking-tight mb-1">Produtos</h1>
+          <p className="text-muted-foreground mb-6">
+            Edite preços, capacidades e cores. O que você salvar aparece na loja na hora.
+          </p>
+          <ProductList />
+        </section>
+
+        <section className="pt-8 border-t border-border">
+          <SetupMFA />
+        </section>
       </main>
 
       <PasswordDialog open={trocandoSenha} onClose={() => setTrocandoSenha(false)} />
