@@ -2,14 +2,15 @@ import { Link } from "react-router-dom";
 import type { Product } from "@/data/products";
 import { formatBRL } from "@/data/products";
 import { cn } from "@/lib/utils";
+import { CompareButton } from "@/components/CompareButton";
 
 export const ProductCard = ({ product }: { product: Product }) => {
   const isSeminovo = product.seminovo;
   return (
+    <div data-reveal className="group/card relative h-full">
     <Link
-      data-reveal
       to={`/produto/${product.id}`}
-      className="group flex flex-col h-full rounded-3xl bg-surface p-5 md:p-6 shadow-card hover:shadow-card-hover hover:-translate-y-1 transition-all duration-300 border border-border/40"
+      className="group flex flex-col h-full rounded-3xl bg-surface p-5 md:p-6 shadow-card group-hover/card:shadow-card-hover group-hover/card:-translate-y-1 transition-all duration-300 border border-border/40"
     >
       {product.badge && (
         <span
@@ -58,5 +59,10 @@ export const ProductCard = ({ product }: { product: Product }) => {
         </div>
       </div>
     </Link>
+    <CompareButton
+      productId={product.id}
+      className="absolute top-4 right-4 md:top-5 md:right-5 transition-transform duration-300 group-hover/card:-translate-y-1"
+    />
+    </div>
   );
 };

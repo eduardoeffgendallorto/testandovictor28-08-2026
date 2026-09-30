@@ -1,6 +1,6 @@
 import { Link, NavLink, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { ShoppingCart, Smartphone, Tablet, Laptop, Watch, Menu, X } from "lucide-react";
+import { ShoppingCart, Smartphone, Tablet, Laptop, Watch, ArrowLeftRight, Menu, X } from "lucide-react";
 import logo from "@/assets/products/logovitao.webp";
 import { useCart } from "@/hooks/useCart";
 import { cn } from "@/lib/utils";
@@ -11,6 +11,7 @@ const links = [
   { to: "/ipads", label: "iPads", icon: Tablet },
   { to: "/macs", label: "MacBooks", icon: Laptop },
   { to: "/relogios", label: "Relógios", icon: Watch },
+  { to: "/comparar", label: "Comparar", icon: ArrowLeftRight },
 ];
 
 export const Header = () => {

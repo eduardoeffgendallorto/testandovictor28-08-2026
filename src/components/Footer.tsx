@@ -15,6 +15,7 @@ const links = [
   { to: "/ipads", label: "iPads" },
   { to: "/macs", label: "MacBooks" },
   { to: "/relogios", label: "Relógios" },
+  { to: "/comparar", label: "Comparar aparelhos" },
 ];
 
 export const Footer = () => (

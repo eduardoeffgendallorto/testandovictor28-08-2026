@@ -19,6 +19,7 @@ import { WhatsAppIcon } from "@/components/WhatsAppIcon";
 import { useCart } from "@/hooks/useCart";
 import { toast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
+import { CompareButton } from "@/components/CompareButton";
 
 const ProdutoView = ({ id }: { id: string }) => {
   const { byId, isLoading } = useCatalog();
@@ -239,6 +240,7 @@ const ProdutoView = ({ id }: { id: string }) => {
               >
                 <ShoppingCart className="h-5 w-5" /> Adicionar ao Carrinho
               </button>
+              <CompareButton productId={product.id} variant="full" />
             </div>
 
             <h2 className="font-bold text-lg mb-3">O que você precisa saber</h2>

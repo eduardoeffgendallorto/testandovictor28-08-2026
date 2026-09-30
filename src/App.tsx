@@ -12,10 +12,10 @@ import Macs from "./pages/Macs.tsx";
 import Relogios from "./pages/Relogios.tsx";
 import Produto from "./pages/Produto.tsx";
 import Carrinho from "./pages/Carrinho.tsx";
+import Comparar from "./pages/Comparar.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import { ScrollToTop } from "@/components/ScrollToTop";
 
-// O painel é carregado só quando alguém abre /admin: clientes da loja não baixam esse código.
 const Admin = lazy(() => import("./pages/Admin.tsx"));
 
 const queryClient = new QueryClient();
@@ -26,7 +26,7 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter basename={import.meta.env.BASE_URL}>
-        <ScrollToTop /> {/* <-- ADICIONADO AQUI */}
+        <ScrollToTop />
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/iphones" element={<IPhones />} />
@@ -36,6 +36,7 @@ const App = () => (
           <Route path="/relogios" element={<Relogios />} />
           <Route path="/produto/:id" element={<Produto />} />
           <Route path="/carrinho" element={<Carrinho />} />
+          <Route path="/comparar" element={<Comparar />} />
           <Route
             path="/admin"
             element={
@@ -44,7 +45,6 @@ const App = () => (
               </Suspense>
             }
           />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

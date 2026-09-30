@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { Header } from "./Header";
 import { Footer } from "./Footer";
 import { WhatsAppFloat } from "./WhatsAppFloat";
+import { CompareBar } from "./CompareBar";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { useCatalog } from "@/hooks/useCatalog";
 
@@ -21,6 +22,7 @@ export const Layout = ({ children }: { children: ReactNode }) => {
         {children}
       </main>
       <Footer />
+      <CompareBar />
       <WhatsAppFloat />
     </div>
   );
