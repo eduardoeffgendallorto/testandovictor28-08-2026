@@ -13,6 +13,7 @@ import Relogios from "./pages/Relogios.tsx";
 import Produto from "./pages/Produto.tsx";
 import Carrinho from "./pages/Carrinho.tsx";
 import NotFound from "./pages/NotFound.tsx";
+import { ScrollToTop } from "@/components/ScrollToTop";
 
 // O painel é carregado só quando alguém abre /admin: clientes da loja não baixam esse código.
 const Admin = lazy(() => import("./pages/Admin.tsx"));
@@ -25,6 +26,7 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter basename={import.meta.env.BASE_URL}>
+        <ScrollToTop /> {/* <-- ADICIONADO AQUI */}
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/iphones" element={<IPhones />} />
