@@ -13,6 +13,7 @@ import Relogios from "./pages/Relogios.tsx";
 import Produto from "./pages/Produto.tsx";
 import Carrinho from "./pages/Carrinho.tsx";
 import Comparar from "./pages/Comparar.tsx";
+import Catalogo from "./pages/Catalogo.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import { ScrollToTop } from "@/components/ScrollToTop";
 
@@ -36,6 +37,7 @@ const App = () => (
           <Route path="/relogios" element={<Relogios />} />
           <Route path="/produto/:id" element={<Produto />} />
           <Route path="/carrinho" element={<Carrinho />} />
+          <Route path="/catalogo" element={<Catalogo />} />
           <Route path="/comparar" element={<Comparar />} />
           <Route
             path="/admin"

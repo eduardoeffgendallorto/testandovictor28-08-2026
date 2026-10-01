@@ -11,7 +11,7 @@ const SUPABASE_URL = process.env.VITE_SUPABASE_URL ?? "https://kcvlwqchqwvlokeoq
 const SUPABASE_KEY =
   process.env.VITE_SUPABASE_PUBLISHABLE_KEY ?? "sb_publishable_tAJgCwNx-uPJFeyJw-160g_JYS-A7Sc";
 
-const rotas = ["/", "/iphones", "/seminovos", "/ipads", "/macs", "/relogios", "/comparar"];
+const rotas = ["/", "/iphones", "/seminovos", "/ipads", "/macs", "/relogios", "/catalogo", "/comparar"];
 
 async function idsDoBanco() {
   const url = `${SUPABASE_URL}/rest/v1/products?select=id&ativo=eq.true&order=ordem.asc`;

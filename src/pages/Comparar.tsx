@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { ArrowLeft, Link2, ArrowLeftRight, Trash2, X } from "lucide-react";
 import { Layout } from "@/components/Layout";
@@ -25,6 +25,7 @@ import {
   montarLinhas,
   opcoesComPreco,
   temFaixaDePreco,
+  type Linha,
 } from "@/data/compare";
 import { buildWhatsAppLink } from "@/lib/whatsapp";
 import { toast } from "@/hooks/use-toast";
@@ -44,6 +45,160 @@ const abrirWhatsApp = (msg: string) =>
 
 const precoTexto = (p: Product) =>
   `${temFaixaDePreco(p) ? "a partir de " : ""}*${formatBRL(menorPreco(p))}*`;
+
+// ---------- Celular: sem rolagem lateral ----------
+// Em vez de uma tabela larga, cada característica vira um bloco com os aparelhos
+// lado a lado em colunas que cabem na tela. O cabeçalho (foto + nome) fica fixo ao rolar.
+
+const Colunas = ({ n, children }: { n: number; children: ReactNode }) => (
+  <div className="grid" style={{ gridTemplateColumns: `repeat(${n}, minmax(0, 1fr))` }}>
+    {children}
+  </div>
+);
+
+const Cel = ({ children, className }: { children: ReactNode; className?: string }) => (
+  <div className={cn("min-w-0 break-words pl-2 first:pl-0 border-l border-border/60 first:border-l-0", className)}>
+    {children}
+  </div>
+);
+
+const Bloco = ({ rotulo, destaque, children }: { rotulo: string; destaque?: boolean; children: ReactNode }) => (
+  <section className={cn("px-3 py-3.5 border-t border-border", destaque && "bg-primary/[0.04]")}>
+    <h3 className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+      {rotulo}
+      {destaque && <span className="sr-only"> (diferente entre os aparelhos)</span>}
+    </h3>
+    {children}
+  </section>
+);
+
+type MobileProps = {
+  items: Product[];
+  linhas: Linha[];
+  baratos: string[];
+  onRemove: (id: string) => void;
+};
+
+const ComparacaoMobile = ({ items, linhas, baratos, onRemove }: MobileProps) => {
+  const n = items.length;
+  // Com 3 colunas o preço precisa de fonte menor para caber sem quebrar.
+  const tamanhoPreco = n >= 3 ? "text-[13px]" : n === 2 ? "text-base" : "text-xl";
+
+  return (
+    <div className="md:hidden rounded-3xl border border-border/40 bg-surface shadow-card">
+      <div className="sticky top-16 z-20 rounded-t-3xl border-b border-border bg-surface/95 px-3 py-3 backdrop-blur">
+        <Colunas n={n}>
+          {items.map((p) => (
+            <Cel key={p.id} className="relative flex flex-col items-center text-center">
+              <button
+                type="button"
+                onClick={() => onRemove(p.id)}
+                aria-label={`Remover ${p.nome} da comparação`}
+                className="absolute -top-1 right-0 h-6 w-6 inline-flex items-center justify-center rounded-full bg-secondary text-muted-foreground"
+              >
+                <X className="h-3.5 w-3.5" />
+              </button>
+              <img src={p.img} alt={p.imgAlt} className="h-14 w-auto object-contain mb-2" />
+              <Link to={`/produto/${p.id}`} className="text-xs font-semibold leading-tight line-clamp-2">
+                {p.nome}
+              </Link>
+            </Cel>
+          ))}
+        </Colunas>
+      </div>
+
+      <Bloco rotulo="Preço">
+        <Colunas n={n}>
+          {items.map((p) => {
+            const desconto = descontoPercent(p);
+            return (
+              <Cel key={p.id}>
+                {temFaixaDePreco(p) && <p className="text-[11px] text-muted-foreground leading-none mb-0.5">a partir de</p>}
+                <p className={cn("font-bold tracking-tight leading-tight tabular-nums", tamanhoPreco)}>
+                  {formatBRL(menorPreco(p))}
+                </p>
+                {p.precoAntigo && desconto && (
+                  <p className="text-[11px] text-muted-foreground mt-0.5">
+                    <span className="line-through">{formatBRL(p.precoAntigo)}</span>{" "}
+                    <span className="font-semibold text-success">-{desconto}%</span>
+                  </p>
+                )}
+                {baratos.includes(p.id) && (
+                  <span className="mt-1.5 inline-block text-[10px] uppercase tracking-wide font-semibold rounded-full px-2 py-0.5 bg-success/15 text-success">
+                    Menor preço
+                  </span>
+                )}
+              </Cel>
+            );
+          })}
+        </Colunas>
+      </Bloco>
+
+      <Bloco rotulo="Preço por capacidade">
+        <Colunas n={n}>
+          {items.map((p) => {
+            const opcoes = opcoesComPreco(p);
+            return (
+              <Cel key={p.id}>
+                {opcoes.length === 0 ? (
+                  <span className="text-xs text-muted-foreground">Consulte as disponíveis</span>
+                ) : (
+                  <ul className="space-y-2">
+                    {opcoes.map((o) => (
+                      <li key={o.opcao}>
+                        <p className="text-[11px] text-muted-foreground leading-none mb-0.5">{o.opcao}</p>
+                        <p className="text-[13px] font-medium tabular-nums">
+                          {o.preco !== null ? formatBRL(o.preco) : "—"}
+                        </p>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </Cel>
+            );
+          })}
+        </Colunas>
+      </Bloco>
+
+      {linhas.map((l) => (
+        <Bloco key={l.chave} rotulo={l.rotulo} destaque={l.difere}>
+          <Colunas n={n}>
+            {l.valores.map((v, i) => (
+              <Cel key={items[i].id} className="text-[13px] leading-snug">
+                {v}
+              </Cel>
+            ))}
+          </Colunas>
+        </Bloco>
+      ))}
+
+      <section className="px-3 py-4 border-t border-border">
+        <Colunas n={n}>
+          {items.map((p) => (
+            <Cel key={p.id} className="flex flex-col gap-2">
+              <button
+                type="button"
+                onClick={() =>
+                  abrirWhatsApp(`Olá Victor! Tenho interesse no *${p.nome}* (${precoTexto(p)}). Pode me tirar umas dúvidas?`)
+                }
+                className="h-10 rounded-xl bg-success text-success-foreground text-xs font-semibold inline-flex items-center justify-center gap-1.5"
+              >
+                <WhatsAppIcon className="h-4 w-4 shrink-0" />
+                {n >= 2 ? "WhatsApp" : "Falar com o Vendedor"}
+              </button>
+              <Link
+                to={`/produto/${p.id}`}
+                className="h-10 rounded-xl border-2 border-foreground text-xs font-semibold inline-flex items-center justify-center"
+              >
+                Ver produto
+              </Link>
+            </Cel>
+          ))}
+        </Colunas>
+      </section>
+    </div>
+  );
+};
 
 const Comparar = () => {
   const { products, byId, isLoading } = useCatalog();
@@ -195,7 +350,9 @@ const Comparar = () => {
           </div>
         ) : (
           <>
-            <div className="overflow-x-auto rounded-3xl border border-border/40 bg-surface shadow-card">
+            <ComparacaoMobile items={items} linhas={linhas} baratos={baratos} onRemove={remove} />
+
+            <div className="hidden md:block overflow-x-auto rounded-3xl border border-border/40 bg-surface shadow-card">
               <table className="w-full border-collapse text-left">
                 <caption className="sr-only">Comparação de aparelhos</caption>
                 <thead>

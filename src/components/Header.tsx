@@ -1,11 +1,12 @@
 import { Link, NavLink, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { ShoppingCart, Smartphone, Tablet, Laptop, Watch, ArrowLeftRight, Menu, X } from "lucide-react";
+import { ShoppingCart, LayoutGrid, Smartphone, Tablet, Laptop, Watch, ArrowLeftRight, Menu, X } from "lucide-react";
 import logo from "@/assets/products/logovitao.webp";
 import { useCart } from "@/hooks/useCart";
 import { cn } from "@/lib/utils";
 
 const links = [
+  { to: "/catalogo", label: "Catálogo", icon: LayoutGrid },
   { to: "/iphones", label: "iPhones", icon: Smartphone },
   { to: "/seminovos", label: "Seminovos", icon: Smartphone },
   { to: "/ipads", label: "iPads", icon: Tablet },

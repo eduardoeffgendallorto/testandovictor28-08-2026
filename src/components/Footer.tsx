@@ -10,6 +10,7 @@ import {
 import { WhatsAppIcon } from "./WhatsAppIcon";
 
 const links = [
+  { to: "/catalogo", label: "Todos os aparelhos" },
   { to: "/iphones", label: "iPhones" },
   { to: "/seminovos", label: "Seminovos" },
   { to: "/ipads", label: "iPads" },
